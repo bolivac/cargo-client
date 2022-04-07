@@ -1,0 +1,21 @@
+<ng-container *ngIf="shipments$ | async as shipments">
+  <span class="lead">Преглед на пратки</span>
+  <hr />
+  <app-shipment-card
+    *ngFor="let shipment of shipments.shipments"
+    [shipment]="shipment"
+  ></app-shipment-card>
+
+  <div class="d-flex justify-content-center">
+    <ngb-pagination
+      [(page)]="page"
+      class="warning"
+      [pageSize]="shipments.size"
+      [maxSize]="5" 
+      (pageChange)="loadPage($event)"
+      [rotate]="true"
+      [boundaryLinks]="true"
+      [collectionSize]="shipments.collectionSize"
+    ></ngb-pagination>
+  </div>
+</ng-container>

@@ -1,0 +1,92 @@
+<ng-container>
+  <h1 class="lead">Листа на курири</h1>
+  <hr>
+  <table class="table border-bottom">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Име</th>
+        <th scope="col">Презиме</th>
+        <th scope="col">Е-мејл</th>
+        <th scope="col">Број</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let courier of couriers$ | async">
+        <td>{{ courier.firstName }}</td>
+        <td>{{ courier.lastName }}</td>
+        <td>{{ courier.email }}</td>
+        <td>{{ courier.phone }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <section>
+    <br />
+    <p class="lead">Нов курир</p>
+    <hr>
+    <form class="form-inline" [formGroup]="courierForm" (ngSubmit)="onSubmit()">
+      <input
+        type="text"
+        formControlName="firstName"
+        class="form-control mb-2 mr-sm-2"
+        placeholder="Име"
+        [ngClass]="{
+          'is-invalid':
+            !courierForm.get('firstName').valid &&
+            courierForm.get('firstName').dirty,
+          'is-valid':
+            courierForm.get('firstName').valid &&
+            courierForm.get('firstName').dirty
+        }"
+      />
+
+      <input
+        type="text"
+        formControlName="lastName"
+        class="form-control mb-2 mr-sm-2"
+        placeholder="Презиме"
+        [ngClass]="{
+          'is-invalid':
+            !courierForm.get('lastName').valid &&
+            courierForm.get('lastName').dirty,
+          'is-valid':
+            courierForm.get('lastName').valid &&
+            courierForm.get('lastName').dirty
+        }"
+      />
+
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        formControlName="email"
+        placeholder="Е-мејл"
+        [ngClass]="{
+          'is-invalid':
+            !courierForm.get('email').valid && courierForm.get('email').dirty,
+          'is-valid':
+            courierForm.get('email').valid && courierForm.get('email').dirty
+        }"
+      />
+
+      <input
+        type="text"
+        formControlName="phone"
+        class="form-control mb-2 mr-sm-2"
+        [ngClass]="{
+          'is-invalid':
+            !courierForm.get('phone').valid && courierForm.get('phone').dirty,
+          'is-valid':
+            courierForm.get('phone').valid && courierForm.get('phone').dirty
+        }"
+        placeholder="Број"
+      />
+
+      <button
+        [disabled]="!courierForm.valid"
+        type="submit"
+        class="btn btn-warning mb-2"
+      >
+        Прифати
+      </button>
+    </form>
+  </section>
+</ng-container>

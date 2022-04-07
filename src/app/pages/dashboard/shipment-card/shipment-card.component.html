@@ -1,0 +1,52 @@
+<div
+  class="card text-center m-4"
+  [routerLink]="['/shipment']"
+  [queryParams]="{ id: shipment._id }"
+>
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-6 col-sm-12">
+        <span class="lead">Испраќач: {{ shipment.senderFullName | titlecase}}</span>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <span class="lead"
+          >Примач:
+          {{
+            shipment.recipient.firstName + ' ' + shipment.recipient.lastName | titlecase
+          }}</span
+        >
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Број на пратка: {{ shipment.uid }}</h5>
+    <hr />
+    <div class="row">
+      <div class="col">
+        <p>Преференции:</p>
+        <span
+          class="m-2 font-weight-bold text-dark border bg-warning rounded p-1"
+          *ngIf="shipment.personalShipment"
+          >Лично</span
+        >
+        <span
+          class="m-2 font-weight-bold text-dark border bg-warning rounded p-1"
+          *ngIf="shipment.recommendedShipment"
+        >
+          Препорачана
+        </span>
+        <span
+          class="m-2 font-weight-bold text-dark border bg-warning rounded p-1"
+          *ngIf="shipment.withReturnShipment"
+        >
+          Со повратница
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <span class="lead font-weight-light"
+      >Датум на прием: {{ shipment.shipmentDate | date: 'short' }}</span
+    >
+  </div>
+</div>

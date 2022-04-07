@@ -1,0 +1,13 @@
+#sidebar {
+  display: table-cell;
+  vertical-align: top;
+  height: 100%;
+}
+
+#content {
+  display: table-cell;
+  width: 100%;
+  height: calc(100vh - 85px);
+  overflow-x: hidden;
+  padding: 20px 20px 30px;
+}

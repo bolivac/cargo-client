@@ -1,0 +1,35 @@
+<ng-container *ngIf="shipmentHistory | async as fileHistory">
+  <div class="modal-header lead">
+    Прегледај историја за пратка под број {{ uid }}
+  </div>
+  <div
+    class="modal-body border-bottom border-warning shadow p-4"
+    *ngFor="let file of fileHistory"
+  >
+    <ng-container *ngFor="let item of file.ops">
+      <ng-container *ngIf="item.value">
+        Назив на измена: {{ item.path }}
+        <br />
+        Оригинална вредност: {{ item.originalValue }}
+        <br />
+        <ng-container *ngIf="isObject(item.value)">
+          <ng-container *ngIf="item.value.length">
+            <ng-container *ngFor="let obj of item.value">
+              Нова вредност: {{ obj | json }}
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="!item.value.length">
+            <ng-container>
+              Нова вредност: {{ item.value | json }}
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!isObject(item.value)">
+          Нова вредност: {{ item.value }}
+        </ng-container>
+        <br />
+        <p>Датум на промена: {{ file.date | date: "Y-MM-d" }}</p>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-container>

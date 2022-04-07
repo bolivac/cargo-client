@@ -1,0 +1,537 @@
+<ng-container>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-6 col-sm-12">
+        <span *ngIf="!paramsId; else viewShipment" class="lead">Креирај нова пратка</span>
+        <ng-template #viewShipment>
+          <span *ngIf="paramsId" class="lead">Прегледај пратка</span>
+        </ng-template>
+      </div>
+      <div class="col-md-6 col-sm-12" *ngIf=" (uuid$ | async) as uid">
+        <span class="lead">Број на пратка: {{ uid }}</span>
+      </div>
+    </div>
+    <hr />
+    <div class="row my-4">
+      <div class="col-md-6 col-sm-12">
+        <div class="form-group">
+          <label for="shipmentDate">Датум на прием:</label>
+          <input
+            formControlName="shipmentDate"
+            flatpickr
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12" *ngIf="paramsId">
+        <div class="form-group">
+          <button
+            type="button"
+            class="btn btn-warning float-right"
+            (click)="checkHistory()"
+          >
+            Прегледај историја
+          </button>
+        </div>
+      </div>
+    </div>
+    <main class="row lead">
+      <div class="col-md-8 col-sm-12 border rounded">
+        <p class="lead my-2 font-weight-lighter">Податоци за достава:</p>
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="recipient">Поштарина:</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Поштарина</span>
+                </div>
+                <input
+                  type="number"
+                  formControlName="shipmentPostage"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-invalid':
+                      !form.get('shipmentPostage').valid &&
+                      form.get('shipmentPostage').touched,
+                      'is-valid':
+                      form.get('shipmentPostage').valid && form.get('shipmentPostage').touched
+                  }"
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">денари</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="sender">Испраќач:</label>
+              <br />
+              <select
+                class="custom-select"
+                id="sender"
+                #sender
+                (change)="onSelectSender(sender.value)"
+                formControlName="senderId"
+                [ngClass]="{
+                  'is-invalid':
+                    !form.get('senderId').valid &&
+                    form.get('senderId').touched,
+                    'is-valid':
+                    form.get('senderId').valid && form.get('senderId').touched
+                }"
+              >
+                <option
+                  *ngFor="let sender of senders$ | async"
+                  [value]="sender._id"
+                >
+                  {{ sender.firstName + ' ' + sender.lastName }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+            <span>Маса на пратка:</span>
+            <div class="input-group">
+              <input
+                type="number"
+                id="shipmentWeight"
+                formControlName="shipmentWeight"
+                class="form-control"
+                placeholder="Внеси маса на пратка"
+                [ngClass]="{
+                  'is-invalid':
+                    !form.get('shipmentWeight').valid &&
+                    form.get('shipmentWeight').touched,
+                    'is-valid':
+                    form.get('shipmentWeight').valid && form.get('shipmentWeight').touched
+                }"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">грама</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="deliveryType">Тип на достава:</label>
+              <br />
+              <select
+                class="custom-select"
+                id="deliveryType"
+                formControlName="deliveryType"
+                [ngClass]="{
+                  'is-invalid':
+                    !form.get('deliveryType').valid &&
+                    form.get('deliveryType').touched,
+                    'is-valid':
+                    form.get('deliveryType').valid && form.get('deliveryType').touched
+                }"
+              >
+                <option value="Од адреса до пошта">Од адреса до пошта</option>
+                <option value="Од адреса до адреса">Од адреса до адреса</option>
+                <option value="Од пошта до адреса">Од пошта до адреса</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="subjectForShipment">Предмет на пратка:</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Внеси предмет на достава"
+                formControlName="subjectOfShipment"
+                [ngClass]="{
+                  'is-invalid':
+                    !form.get('subjectOfShipment').valid &&
+                    form.get('subjectOfShipment').touched,
+                    'is-valid':
+                    form.get('subjectOfShipment').valid && form.get('subjectOfShipment').touched
+                }"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <p>Преференции за испорака:</p>
+              <div class="form-check form-check-inline">
+                <input
+                  formControlName="personalShipment"
+                  class="form-check-input"
+                  type="checkbox"
+                  id="personalShipment"
+                />
+                <label class="form-check-label" for="personalShipment">
+                  Лично
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  formControlName="recommendedShipment"
+                  class="form-check-input"
+                  type="checkbox"
+                  id="recommendedShipment"
+                />
+                <label class="form-check-label" for="recommendedShipment">
+                  Препорачана пратка
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  formControlName="withReturnShipment"
+                  class="form-check-input"
+                  type="checkbox"
+                  id="withReturnShipment"
+                />
+                <label class="form-check-label" for="withReturnShipment">
+                  Со повратница
+                </label>
+              </div>
+            </div>
+            <hr />
+            <ng-container formArrayName="deliveryAttempts">
+              <p class="lead">Статус на достава:</p>
+              <div
+                class="form-group border shadow p-4"
+                *ngFor="
+                  let deliveryAttempt of deliveryAttempts.controls;
+                  index as i
+                "
+                [formGroupName]="i"
+              >
+                <p class="lead">Обид за достава #{{ i + 1 }}</p>
+                <div class="row">
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="{{ 'courier' + i }}">Овластен курир:</label>
+                      <br />
+                      <select
+                        class="custom-select"
+                        formControlName="courierId"
+                        id="{{ 'courier' + i }}"
+                      >
+                        <option
+                          *ngFor="let courier of couriers$ | async"
+                          [value]="courier._id"
+                        >
+                          {{ courier.firstName + ' ' + courier.lastName }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="date">Датум на достава:</label>
+                      <input
+                        formControlName="date"
+                        [config]="configureDate"
+                        [value]="deliveryAttempts.value.date"
+                        class="form-control"
+                        flatpickr
+                      />
+                    </div>
+                  </div>
+                </div>
+                <ng-container>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'successfulDelivery' + i }}"
+                      formControlName="successfulDelivery"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'successfulDelivery' + i }}"
+                    >
+                      Доставено
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'notFoundAtTheAddress' + i }}"
+                      formControlName="notFoundAtTheAddress"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'notFoundAtTheAddress' + i }}"
+                    >
+                      Незатекнат на адреса
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'refuseToSign' + i }}"
+                      formControlName="refuseToSign"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'refuseToSign' + i }}"
+                    >
+                      Одбива да потпише
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'refuseToAcept' + i }}"
+                      formControlName="refuseToAccept"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'refuseToAcept' + i }}"
+                    >
+                      Одбива да прими
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      formControlName="givenNotice"
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'givenNotice' + i }}"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'givenNotice' + i }}"
+                    >
+                      Оставено известување
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      formControlName="deceased"
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'deceased' + i }}"
+                    />
+                    <label class="form-check-label" for="{{ 'deceased' + i }}">
+                      Починат
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      formControlName="evicted"
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'evicted' + i }}"
+                    />
+                    <label class="form-check-label" for="{{ 'evicted' + i }}">
+                      Иселен
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'incorrectAddress' + i }}"
+                      formControlName="incorrectAddress"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'incorrectAddress' + i }}"
+                    >
+                      Адресата не е точна
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'illiterate' + i }}"
+                      formControlName="illiterate"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'illiterate' + i }}"
+                    >
+                      Неписмен
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'noPersonAtThatAddress' + i }}"
+                      formControlName="noPersonAtThatAddress"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'noPersonAtThatAddress' + i }}"
+                    >
+                      Нема такво лице на таа адреса
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'leftInWorkspace' + i }}"
+                      formControlName="leftInWorkspace"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'leftInWorkspace' + i }}"
+                    >
+                      Оставено во просториите каде што работи
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="{{ 'recipientDidNotPickedUp' + i }}"
+                      formControlName="recipientDidNotPickedUp"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="{{ 'recipientDidNotPickedUp' + i }}"
+                    >
+                      Не подигнал
+                    </label>
+                  </div>
+                </ng-container>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="additionalInformation"
+                        >Дополнителни информации:</label
+                      >
+                      <textarea
+                        formControlName="additionalInformation"
+                        type="text"
+                        class="form-control"
+                        rows="5"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <button
+              type="button"
+              (click)="addDeliveryAttempt()"
+              class="btn btn-dark m-4 float-right"
+            >
+              Додај нов обид
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-sm-12 border rounded" formGroupName="recipient">
+        <p class="lead my-2 font-weight-lighter">Податоци за примач:</p>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Име и презиме:</span>
+            </div>
+            <input
+              type="text"
+              formControlName="firstName"
+              aria-label="First name"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid':
+                  !recipient.get('firstName').valid &&
+                  recipient.get('firstName').touched,
+                  'is-valid':
+                  recipient.get('firstName').valid && recipient.get('firstName').touched
+              }"
+            />
+            <input
+              type="text"
+              formControlName="lastName"
+              aria-label="Last name"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid':
+                  !recipient.get('lastName').valid &&
+                  recipient.get('lastName').touched,
+                  'is-valid':
+                  recipient.get('lastName').valid && recipient.get('lastName').touched
+              }"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="phone">Телефон:</label>
+          <input
+            type="text"
+            formControlName="phone"
+            class="form-control"
+            placeholder="Внеси телефон"
+            [ngClass]="{
+              'is-invalid':
+                !recipient.get('phone').valid &&
+                recipient.get('phone').touched,
+                'is-valid':
+                recipient.get('phone').valid && recipient.get('phone').touched
+            }"
+          />
+        </div>
+        <div class="form-group">
+          <label for="address">Адреса:</label>
+          <input
+            type="text"
+            formControlName="address"
+            class="form-control"
+            placeholder="Внеси адреса"
+            [ngClass]="{
+              'is-invalid':
+                !recipient.get('address').valid &&
+                recipient.get('address').touched,
+                'is-valid':
+                recipient.get('address').valid && recipient.get('address').touched
+            }"
+          />
+        </div>
+        <div class="form-group">
+          <label for="city">Град:</label>
+          <input
+            type="text"
+            formControlName="city"
+            class="form-control"
+            placeholder="Внеси град"
+            [ngClass]="{
+              'is-invalid':
+                !recipient.get('city').valid &&
+                recipient.get('city').touched,
+                'is-valid':
+                recipient.get('city').valid && recipient.get('city').touched
+            }"
+          />
+        </div>
+        <div class="form-group">
+          <label for="additionalInformation">Дополнителни информации:</label>
+          <textarea
+            type="text"
+            formControlName="additionalInformation"
+            class="form-control"
+            rows="5"
+          >
+          </textarea>
+        </div>
+      </div>
+    </main>
+    <div class="row my-4">
+      <div class="col-12">
+        <button type="submit" class="btn btn-warning float-right">
+          Потврди
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-container>

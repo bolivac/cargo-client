@@ -1,0 +1,121 @@
+<ng-container >
+  <h1 class="lead">Листа на испраќачи</h1>
+  <hr>
+  <table class="table border-bottom">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Име</th>
+        <th scope="col">Презиме</th>
+        <th scope="col">Адреса</th>
+        <th scope="col">Град</th>
+        <th scope="col">ЕМБС</th>
+        <th scope="col">Број</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sender of senders$ | async">
+        <td>{{ sender.firstName }}</td>
+        <td>{{ sender.lastName }}</td>
+        <td>{{ sender.address }}</td>
+        <td>{{ sender.city }}</td>
+        <td>{{ sender.embs }}</td>
+        <td>{{ sender.phone }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <section>
+    <br />
+    <p class="lead">Нов испраќач</p>
+    <hr>
+    <form class="form-inline" [formGroup]="senderForm" (ngSubmit)="onSubmit()">
+      <input
+        type="text"
+        formControlName="firstName"
+        class="form-control mb-2 mr-sm-2"
+        placeholder="Име"
+        [ngClass]="{
+          'is-invalid':
+            !senderForm.get('firstName').valid &&
+            senderForm.get('firstName').dirty,
+            'is-valid':
+            senderForm.get('firstName').valid && senderForm.get('firstName').dirty
+        }"
+      />
+
+      <input
+        type="text"
+        formControlName="lastName"
+        class="form-control mb-2 mr-sm-2"
+        placeholder="Презиме"
+        [ngClass]="{
+          'is-invalid':
+            !senderForm.get('lastName').valid &&
+            senderForm.get('lastName').dirty,
+            'is-valid':
+            senderForm.get('lastName').valid && senderForm.get('lastName').dirty
+        }"
+      />
+
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        formControlName="address"
+        placeholder="Адреса"
+        [ngClass]="{
+          'is-invalid':
+            !senderForm.get('address').valid &&
+            senderForm.get('address').dirty,
+            'is-valid':
+            senderForm.get('address').valid && senderForm.get('address').dirty
+        }"
+      />
+
+      <input
+        type="text"
+        formControlName="city"
+        class="form-control mb-2 mr-sm-2"
+        [ngClass]="{
+          'is-invalid':
+            !senderForm.get('city').valid && senderForm.get('city').dirty,
+            'is-valid':
+            senderForm.get('city').valid && senderForm.get('city').dirty
+        }"
+        placeholder="Град"
+      />
+
+      <input
+        type="text"
+        formControlName="embs"
+        class="form-control mb-2 mr-sm-2"
+        [ngClass]="{
+          'is-invalid':
+            !senderForm.get('embs').valid && senderForm.get('embs').dirty,
+            'is-valid':
+            senderForm.get('embs').valid && senderForm.get('embs').dirty
+        }"
+        placeholder="ЕМБС"
+      />
+
+      <input
+        type="text"
+        formControlName="phone"
+        class="form-control mb-2 mr-sm-2"
+        [ngClass]="{
+          'is-invalid':
+            !senderForm.get('phone').valid && senderForm.get('phone').dirty,
+            'is-valid':
+            senderForm.get('phone').valid && senderForm.get('phone').dirty
+        }"
+        placeholder="Број"
+      />
+
+      <button
+        [disabled]="!senderForm.valid"
+        type="submit"
+        class="btn btn-warning mb-2"
+      >
+        Прифати
+      </button>
+    </form>
+  </section>
+</ng-container>

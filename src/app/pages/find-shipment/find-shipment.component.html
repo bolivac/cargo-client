@@ -1,0 +1,36 @@
+<ng-container>
+  <span class="lead">Пребарај пратка</span>
+  <hr />
+  <div class="row justify-content-center">
+    <div class="col-sm-12 col-md-8 m-2">
+      <input
+        #findShipmentInput
+        type="text"
+        placeholder="Изврши пребарување"
+        class="form-control text-center"
+      />
+    </div>
+    <div class="col-sm-12 col-md-2 my-2 text-center">
+      <button
+        type="button"
+        (click)="findShipment(findShipmentInput.value)"
+        class="btn btn-warning"
+      >
+        Барај
+      </button>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="shipments$ | async as shipments">
+  <hr />
+  <app-shipment-card
+    *ngFor="let shipment of shipments.shipments"
+    [shipment]="shipment"
+  ></app-shipment-card>
+
+  <ng-container *ngIf="shipments.shipments.length < 1">
+    <div class="d-flex justify-content-center">
+      <p class="lead text-danger">Нема таква пратка.</p>
+    </div>
+  </ng-container>
+</ng-container>

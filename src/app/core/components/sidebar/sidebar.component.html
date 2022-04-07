@@ -1,0 +1,79 @@
+<nav
+  class="navbar h-100 navbar-expand-lg navbar-dark bg-dark align-items-start"
+  *ngIf="isLoggedIn$ | async"
+>
+  <div class="container-fluid">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="nav flex-column navbar-nav me-auto">
+        <li class="nav-item my-2 border-bottom border-warning">
+          <a
+            class="navbar-brand text-warning font-weight-bold text-lead"
+            [routerLink]="['dashboard']"
+            >biznisposta.mk</a
+          >
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            [routerLinkActive]="['active']"
+            [routerLink]="['dashboard']"
+            >Почетна
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLinkActive]="['active']"
+            [routerLink]="['shipment']"
+            >Нова пратка</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLinkActive]="['active']"
+            [routerLink]="['find-shipment']"
+            >Најди пратка</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLinkActive]="['active']"
+            [routerLink]="['courier-management']"
+            >Менаџирај курир</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLinkActive]="['active']"
+            [routerLink]="['sender-management']"
+            >Менаџирај испраќач</a
+          >
+        </li>
+
+        <li class="nav-item mt-4">
+          <a
+            class="btn btn-danger"
+            (click)="onLogout()"
+            >Одјава
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
