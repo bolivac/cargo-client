@@ -18,7 +18,7 @@ import { CheckHistoryModalComponent } from './core/components/check-history-moda
     BrowserAnimationsModule,
     HttpClientModule,
     RouterModule,
-    AppRoutingModule, // Main routes for application
+    AppRoutingModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
